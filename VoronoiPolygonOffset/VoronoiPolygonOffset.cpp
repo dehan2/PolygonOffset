@@ -456,13 +456,21 @@ void VoronoiPolygonOffset::make_offset_vertex_for_trunk(VEdge2D* trunk, const fl
 	pair<bool, list<rg_Point2D>> offsetVerticesInfo = find_offset_vertex_for_trunk(trunk, offsetAmount);
 	if (offsetVerticesInfo.first == true)
 	{
-/*
-		cout << "Curr trunk: " << trunk->getID() << " - vtx: "<<offsetVerticesInfo.second.size()<<endl;
+
+		//For debug
+		/*cout << "Curr trunk: " << trunk->getID() << " - vtx: "<<offsetVerticesInfo.second.size()<<endl;
+		int index = 0;
+		for (auto& offsetVtx : offsetVerticesInfo.second)
+		{
+			cout << "OV[" << index++ << "]: [" << offsetVtx.getX() << ", " << offsetVtx.getY() << "]" << endl;
+		}
+		cout << endl;*/
+
 
 		if (trunk == firstTrunk)
 			cout << "Trunk again" << endl;
 		if (firstTrunk == nullptr)
-			firstTrunk = trunk;*/
+			firstTrunk = trunk;
 
 		list<rg_Point2D>& offsetVertices = offsetVerticesInfo.second;
 		manage_offset_vertices_order(offsetVertices, startVtxOfTraverse);
@@ -558,7 +566,7 @@ void VoronoiPolygonOffset::process_offset_vertex_for_trunk(const rg_Point2D& off
 		if (!TStack.empty())
 		{
 			float distanceToTop = TStack.back().distance(offsetVtx);
-			cout << "TstackSize: "<<TStack.size()<<", distance: " << distanceToTop << endl;
+			//cout << "TstackSize: "<<TStack.size()<<", distance: " << distanceToTop << endl;
 		}
 
 		switch (status)
@@ -572,14 +580,14 @@ void VoronoiPolygonOffset::process_offset_vertex_for_trunk(const rg_Point2D& off
 				CStack.back()->close_offset();
 				CStack.pop_back();
 				TStack.pop_back();
-				cout << "End" << endl;
+				//cout << "End" << endl;
 			}
 			else
 			{
 				status = SPLIT;
 				TStack.push_back(offsetVtx);
 				CStack.back()->add_offset_vertex(offsetVtx, trunk);
-				cout << "Split" << endl;
+				//cout << "Split" << endl;
 			}
 		}
 		break;
@@ -591,7 +599,7 @@ void VoronoiPolygonOffset::process_offset_vertex_for_trunk(const rg_Point2D& off
 				status = CONNECT;
 				//CStack.pop_back();
 				TStack.pop_back();
-				cout << "Connect" << endl;
+				//cout << "Connect" << endl;
 			}
 			else
 			{
@@ -600,7 +608,7 @@ void VoronoiPolygonOffset::process_offset_vertex_for_trunk(const rg_Point2D& off
 				offsets.push_back(Offset(offsets.size(), offsetAmount));
 				CStack.push_back(&offsets.back());
 				CStack.back()->add_offset_vertex(offsetVtx, trunk);
-				cout << "Start" << endl;
+				//cout << "Start" << endl;
 			}
 		}
 		break;
@@ -614,7 +622,7 @@ void VoronoiPolygonOffset::process_offset_vertex_for_trunk(const rg_Point2D& off
 		status = START;
 		TStack.push_back(offsetVtx);
 		CStack.back()->add_offset_vertex(offsetVtx, trunk);
-		cout << "Start" << endl;
+		//cout << "Start" << endl;
 	}
 }
 
@@ -1025,12 +1033,18 @@ void VoronoiPolygonOffset::compute_offset()
 		}
 	}
 	
-	find_arc_edges(m_offsets, 0);
+	//find_arc_edges(m_offsets, 0);
 
 	cout << "Offset found: " << m_offsets.size() << endl;
 	for (auto& offset : m_offsets)
 	{
 		cout << "Offset[" << offset.get_ID() << "] : " << offset.get_vertices().size() << endl;
+		int index = 0;
+		for (auto& ov : offset.get_vertices())
+		{
+			cout << "OV[" << index++ << "]: [" << ov.get_coordinate().getX() << ", " << ov.get_coordinate().getY() << "]" << endl;
+		}
+		cout << endl;
 	}
 
 	m_scene->pOffsets = &m_offsets;
