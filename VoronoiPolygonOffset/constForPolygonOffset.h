@@ -7,3 +7,5 @@ const float SCALE_FROM_REAL_TO_COORD = 20;
 const int TARGET_FLIGHT_TIME = 180;
 
 const float INTERVAL_BETWEEN_SEARCH_AREA = 0;
+
+const double IDENTICAL_POINT_THRESHOLD = 1.0e-2;

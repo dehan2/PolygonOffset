@@ -574,32 +574,32 @@ void VoronoiPolygonOffset::process_offset_vertex_for_trunk(const rg_Point2D& off
 		case START:
 		case CONNECT:
 		{
-			if (!TStack.empty() && TStack.back().distance(offsetVtx) < 1.0)
+			if (!TStack.empty() && TStack.back().distance(offsetVtx) < IDENTICAL_POINT_THRESHOLD)
 			{
 				status = END;
 				CStack.back()->close_offset();
 				CStack.pop_back();
 				TStack.pop_back();
-				//cout << "End" << endl;
+				//cout << "End at [" << offsetVtx.getX() << ", " << offsetVtx.getY() << "] - " << CStack.back()->get_ID() << endl;
 			}
 			else
 			{
 				status = SPLIT;
 				TStack.push_back(offsetVtx);
 				CStack.back()->add_offset_vertex(offsetVtx, trunk);
-				//cout << "Split" << endl;
+				//cout << "Split at [" << offsetVtx.getX() << ", " << offsetVtx.getY() << "] - " << CStack.back()->get_ID() << endl;
 			}
 		}
 		break;
 		case END:
 		case SPLIT:
 		{
-			if (TStack.back().distance(offsetVtx) < 1.0)
+			if (TStack.back().distance(offsetVtx) < IDENTICAL_POINT_THRESHOLD)
 			{
 				status = CONNECT;
 				//CStack.pop_back();
 				TStack.pop_back();
-				//cout << "Connect" << endl;
+				//cout << "Connect at [" <<offsetVtx.getX()<<", "<<offsetVtx.getY()<< "] - " << CStack.back()->get_ID() << endl;
 			}
 			else
 			{
@@ -608,7 +608,7 @@ void VoronoiPolygonOffset::process_offset_vertex_for_trunk(const rg_Point2D& off
 				offsets.push_back(Offset(offsets.size(), offsetAmount));
 				CStack.push_back(&offsets.back());
 				CStack.back()->add_offset_vertex(offsetVtx, trunk);
-				//cout << "Start" << endl;
+				//cout << "Start at [" << offsetVtx.getX() << ", " << offsetVtx.getY() << "] - " << CStack.back()->get_ID() << endl;
 			}
 		}
 		break;
@@ -622,7 +622,7 @@ void VoronoiPolygonOffset::process_offset_vertex_for_trunk(const rg_Point2D& off
 		status = START;
 		TStack.push_back(offsetVtx);
 		CStack.back()->add_offset_vertex(offsetVtx, trunk);
-		//cout << "Start" << endl;
+		//cout << "Start at [" << offsetVtx.getX() << ", " << offsetVtx.getY() << "] - "<<CStack.back()->get_ID() << endl;
 	}
 }
 
